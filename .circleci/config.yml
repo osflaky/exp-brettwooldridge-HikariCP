@@ -1,0 +1,20 @@
+jobs:
+  build:
+    machine: true
+    resource_class: brettwooldridge/ubuntu
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+
+    steps:
+      # Manually clone via HTTPS using a token instead of the checkout step
+      - run:
+          name: Clone Repository via HTTPS Proxy
+          command: |
+            git clone https://${GITHUB_TOKEN}@github.com/brettwooldridge/HikariCP.git .
+            git checkout ${CIRCLE_SHA1}
+      - run:
+         name: Build HikariCP
+         command: |
+           export PATH=$JAVA_HOME/bin:$PATH
+
+           mvn clean package
